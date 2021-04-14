@@ -1,0 +1,4 @@
+# co ignorowac
+__pycache__/
+daftacademy_env/
+.DS_Store
