@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, HTTPException
 from starlette.requests import Request
 from pydantic import BaseModel
 from functions import dehash
@@ -71,3 +71,21 @@ def register(request: RegisterResponse):
     register_response = PatientResponse(id=app.patient, name=name, surname=surname, register_date=str(register_date), vaccination_date=str(vaccination_date))
     app.patients[app.patient] = dict(register_response)
     return register_response
+
+@app.get("/patient/{id}")
+def patient(id: int):
+    int_id = int(id)
+    if int_id < 1:
+        raise HTTPException(status_code=400, detail="id lower than 0")
+    elif int_id in app.patients:
+        patient = app.patients[int_id]
+        patient_response = PatientResponse(
+            id=int_id,
+            name=patient['name'],
+            surname=patient['surname'],
+            register_date=patient['register_date'],
+            vaccination_date=patient['vaccination_date']
+        )
+        return patient_response
+    else
+        raise HTTPException(status_code=404, content="id not found")
