@@ -16,6 +16,26 @@ def test_method():
     assert response.status_code == 200
     assert response.text == f'{{"method":{method}}}'
 
+    method = '"PUT"'
+    response = client.put("/method")
+    assert response.status_code == 200
+    assert response.text == f'{{"method":{method}}}'
+
+    method = '"OPTIONS"'
+    response = client.options("/method")
+    assert response.status_code == 200
+    assert response.text == f'{{"method":{method}}}'
+
+    method = '"DELETE"'
+    response = client.delete("/method")
+    assert response.status_code == 200
+    assert response.text == f'{{"method":{method}}}'
+
+    method = '"POST"'
+    response = client.post("/method")
+    assert response.status_code == 201
+    assert response.text == f'{{"method":{method}}}'
+
 def test_hello_name():
     name = 'Kamila'
     response = client.get(f"/hello/{name}")
