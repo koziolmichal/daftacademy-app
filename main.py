@@ -87,5 +87,5 @@ def patient(id: int):
             vaccination_date=patient['vaccination_date']
         )
         return patient_response
-    else
+    else:
         raise HTTPException(status_code=404, content="id not found")
