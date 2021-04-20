@@ -1,14 +1,9 @@
 from fastapi import FastAPI
 from starlette.requests import Request
 from pydantic import BaseModel
-import json
+from functions import dehash
 
 app = FastAPI()
-app.counter = 0
-
-
-class PostResp(BaseModel):
-    method: str
 
 @app.get("/")
 def root():
@@ -34,11 +29,11 @@ def get_method(request: Request):
 def post_method(request: Request):
     return {"method": f"{request.method}"}
 
-@app.get("/hello/{name}")
-def hello_name_view(name: str):
-    return f"Hello {name}"
-
-@app.get("/counter")
-def counter():
-    app.counter += 1
-    return app.counter
+@app.get("/auth")
+def auth(password: str = '', password_hash: str = ''):
+    hashed = dehash(password) == password_hash
+    if hashed and password and password_hash:
+        status_code = 204
+    else:
+        status_code = 401
+    return Response(status_code=status_code)
