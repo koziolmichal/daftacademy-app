@@ -2,10 +2,11 @@ from fastapi import FastAPI, Response
 from starlette.requests import Request
 from pydantic import BaseModel
 from functions import dehash
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = FastAPI()
 app.patient = 0
+app.patients = dict()
 
 class RegisterResponse(BaseModel):
     name: str
@@ -59,11 +60,14 @@ def register(request: RegisterResponse):
     register_date = datetime.date(datetime.now())
     name_letters = 0
     surname_letters = 0
-    for c in name:
-        name_letters += 1
-    for c in surname:
-        surname_letters =+ 1
+    for i in range(len(name)):
+        if name[i].isalpha():
+            name_letters += 1
+    for i in range(len(surname)):
+        if surname[i].isalpha():
+            surname_letters += 1
     name_surname_letters = name_letters + surname_letters
     vaccination_date = register_date + timedelta(days=name_surname_letters)
     register_response = PatientResponse(id=app.patient, name=name, surname=surname, register_date=str(register_date), vaccination_date=str(vaccination_date))
+    app.patients[app.patient] = dict(register_response)
     return register_response

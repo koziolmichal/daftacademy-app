@@ -1,4 +1,5 @@
 import pytest
+import datetime
 from fastapi.testclient import TestClient
 from functions import dehash
 
@@ -69,3 +70,34 @@ def test_auth(password: str, password_hash: str, result: int):
     assert response.status_code == result
     if result == 204:
         assert not response.content
+
+today = datetime.date.today()
+json_to_register = {
+    "name": "Jan",
+    "surname": "Kowalski-Żądło"
+}
+json_registered = {
+    "id": 1,
+    "name": "Jan",
+    "surname": "Kowalski-Żądło",
+    "register_date": str(today),
+    "vaccination_date": str(today + datetime.timedelta(16))
+}
+
+@pytest.mark.parametrize(
+    [  # values set
+        'json_in', 'json_out'
+    ],
+    [  # answers set
+        [  # 1st answer
+            json_to_register,  # 1st element [json_in] from 1st answer
+            json_registered  # 2nd element [json_out] from 1st answer
+        ]
+    ]
+)
+def test_register_view(json_in, json_out):
+    response = client.post(f"/register", json=json_in)
+    dct_json = dict(response.json())
+    assert response.status_code == 201
+    assert dct_json['name'] == json_out['name']
+    assert dct_json['surname'] == json_out['surname']
