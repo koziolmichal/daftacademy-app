@@ -2,8 +2,21 @@ from fastapi import FastAPI, Response
 from starlette.requests import Request
 from pydantic import BaseModel
 from functions import dehash
+from datetime import datetime
 
 app = FastAPI()
+app.patient = 0
+
+class RegisterResponse(BaseModel):
+    name: str
+    surname: str
+
+class PatientResponse(BaseModel):
+    id: int
+    name: str
+    surname: str
+    register_date: str
+    vaccination_date: str
 
 @app.get("/")
 def root():
@@ -37,3 +50,13 @@ def auth(password: str = '', password_hash: str = ''):
     else:
         status_code = 401
     return Response(status_code=status_code)
+
+@app.post("/register", status_code = 201, response_model=PatientResponse)
+def register(request: RegisterResponse)
+    app.patient += 1
+    name = request.name
+    surname = request.surname
+    register_date = datetime.date(datetime.now())
+    vaccination_date = register_date + timedelta((len.(name)+len.(surname)))
+    register_response = PatientResponse(id=app.patient, name=name, surname=surname, register_date=str(register_date), vaccination_date=str(vaccination_date))
+    return register_response
