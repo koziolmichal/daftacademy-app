@@ -53,3 +53,19 @@ def test_method():
 )
 def test_check_password(password: str, password_hash: str):
     assert password_hash == dehash(password)
+
+@pytest.mark.parametrize(
+    ['password', 'password_hash', 'result'],
+    [
+        ['abc', dehash('abc'), 204],
+        ['haslo', 'zahaszowane_haslo', 401],
+        ['', '', 401],
+        ['', 'cos', 401],
+        ['cos', '', 401]
+    ]
+)
+def test_auth(password: str, password_hash: str, result: int):
+    response = client.get(f"/auth?password={password}&password_hash={password_hash}")
+    assert response.status_code == result
+    if result == 204:
+        assert not response.content
