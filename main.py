@@ -52,11 +52,18 @@ def auth(password: str = '', password_hash: str = ''):
     return Response(status_code=status_code)
 
 @app.post("/register", status_code = 201, response_model=PatientResponse)
-def register(request: RegisterResponse)
+def register(request: RegisterResponse):
     app.patient += 1
     name = request.name
     surname = request.surname
     register_date = datetime.date(datetime.now())
-    vaccination_date = register_date + timedelta((len.(name)+len.(surname)))
+    name_letters = 0
+    surname_letters = 0
+    for c in name:
+        name_letters += 1
+    for c in surname:
+        surname_letters =+ 1
+    name_surname_letters = name_letters + surname_letters
+    vaccination_date = register_date + timedelta(days=name_surname_letters)
     register_response = PatientResponse(id=app.patient, name=name, surname=surname, register_date=str(register_date), vaccination_date=str(vaccination_date))
     return register_response
