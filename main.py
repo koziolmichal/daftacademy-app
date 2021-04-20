@@ -88,4 +88,4 @@ def patient(id: int):
         )
         return patient_response
     else:
-        raise HTTPException(status_code=404, content="id not found")
+        raise HTTPException(status_code=404, detail="id not found")
